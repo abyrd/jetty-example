@@ -4,6 +4,8 @@ import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.DefaultHandler;
 import org.eclipse.jetty.server.handler.HandlerCollection;
+import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.eclipse.jetty.servlet.ServletHandler;
 
 import java.io.IOException;
 
@@ -37,18 +39,20 @@ public class JettyMain {
     public static void main(String[] args) throws Exception {
         int port = 8080;
         Server server = new Server(port);
-        server.setHandler(new ExampleJettyHandler());
-        server.start();
-        server.join();
 
-//        ServletContextHandler context = new ServletContextHandler();
-//        context.setContextPath("/hello");
-//        context.addServlet(HelloServlet.class, "/");
-//
+        // ServletHandler versus ServletContextHandler https://stackoverflow.com/a/30744577
+
+        ServletHandler servletHandler = new ServletHandler();
+        // With a path like /echo/* You can get the wildcard capture with req.getPathInfo() in the servlet.
+        // With a path like /echo/{val} You can get the wildcard capture with req. in the servlet.
+        servletHandler.addServletWithMapping(ExampleJettyServlet.class, "/echo/*");
+
 //        HandlerCollection handlers = new HandlerCollection();
 //        handlers.setHandlers(new Handler[]{context, new DefaultHandler()});
+//
+//        server.setHandler(new ExampleJettyHandler());
 
-        server.setHandler(new ExampleJettyHandler());
+        server.setHandler(servletHandler);
         server.start();
         server.join();
     }
