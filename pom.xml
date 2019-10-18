@@ -1,0 +1,100 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <name>jetty-example</name>
+    <description>JE</description>
+    <url>https://github.com/abyrd/jetty-example</url>
+
+    <groupId>com.conveyal</groupId>
+    <artifactId>jetty-example</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+    <licenses>
+        <license>
+            <name>MIT</name>
+            <url>https://opensource.org/licenses/MIT</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Andrew Byrd</name>
+            <email>abyrd@conveyal.com</email>
+            <organization>Conveyal</organization>
+            <organizationUrl>http://conveyal.com/</organizationUrl>
+        </developer>
+    </developers>
+
+    <!-- Define where the source code for this project lives -->
+    <scm>
+        <connection>scm:git:https://github.com/abyrd/jetty-example.git</connection>
+        <developerConnection>scm:git:https://github.com/abyrd/jetty-example.git</developerConnection>
+        <url>https://github.com/abyrd/jetty-example</url>
+    </scm>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <!-- use Java 11 -->
+                    <release>11</release>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.1.2</version>
+                <configuration>
+                    <archive>
+                        <manifestEntries>
+                            <!-- For Java 11 Modules, specify a module name. Do not create module-info.java until all
+                                 our dependencies specify a module name. -->
+                            <Automatic-Module-Name>com.conveyal.example.jetty</Automatic-Module-Name>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.6.0</version>
+                <executions>
+                    <execution><goals><goal>java</goal></goals></execution>
+                </executions>
+                <configuration>
+                    <mainClass>com.conveyal.example.jetty.JettyMain</mainClass>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+        <!-- Jetty, relatively lightweight HTTP server. -->
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-server</artifactId>
+            <version>9.4.21.v20190926</version>
+        </dependency>
+        <!-- Jackson provides fast streaming JSON (de)serialization of Java objects. -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>2.10.0</version>
+        </dependency>
+        <!-- Jackson-core has only a JSON streaming API - add Java binding capabilites. -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.10.0</version>
+        </dependency>
+        <!-- Including Logback causes Jetty to log heavily. Rather than autoscan-configuring it, I just removed it. -->
+    </dependencies>
+</project>
